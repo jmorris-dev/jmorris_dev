@@ -1,14 +1,16 @@
 const express = require('express');
 const mongodb = require('mongodb');
+const authenticate = require('../../middleware/auth');
 
 const router = express.Router();
+
 
 router.get('/', async (req, res) => {
     const posts = await loadPostCollection();
     res.send(await posts.find({}).toArray());
 });
 
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
     const posts = await loadPostCollection();
     await posts.insertOne({
         text: req.body.text,
